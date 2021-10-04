@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3141336772801079028}
   - component: {fileID: 1482141295409807582}
+  - component: {fileID: -5370756026239916124}
   m_Layer: 0
   m_Name: BASEDirectionCover
   m_TagString: Untagged
@@ -49,6 +50,20 @@ MonoBehaviour:
   downSprite: {fileID: 7816579671404485219, guid: 88f73daf1fe26d24994ed038a6601dd5, type: 3}
   leftSprite: {fileID: 5339229742347854233, guid: 88f73daf1fe26d24994ed038a6601dd5, type: 3}
   rightSprite: {fileID: -2642393358525368334, guid: 88f73daf1fe26d24994ed038a6601dd5, type: 3}
+--- !u!114 &-5370756026239916124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4102427760045866390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ac4e4988c5949a4798fd8ea661073c6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canBlock: 0
+  life: 1
 --- !u!1 &4151873080089719744
 GameObject:
   m_ObjectHideFlags: 0

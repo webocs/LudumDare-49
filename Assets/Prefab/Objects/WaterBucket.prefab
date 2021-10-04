@@ -9,6 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3141336772801079028}
+  - component: {fileID: -3511223933031157797}
   m_Layer: 0
   m_Name: WaterBucket
   m_TagString: Untagged
@@ -31,6 +32,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &-3511223933031157797
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4102427760045866390}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3c300f902dc66f4187a3323ce1a2902, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4151873080089719744
 GameObject:
   m_ObjectHideFlags: 0

@@ -17,24 +17,36 @@ public class Player : MonoBehaviour
     public GameObject cantActPreviewPrefab;
 
     public Grid grid;
+    public Grid defenseGrid;
 
+    public AudioClip moveSfx;
+    public AudioClip placeDefense;    
+    
     private void Start()
     {
         MovementPreviewTiles = new List<GameObject>();
         PreviewSelectedMovement();
-        grid = FindObjectOfType<Grid>();
+        grid = GameObject.Find("CropsGrid").GetComponent<Grid>();
+        defenseGrid = GameObject.Find("DefensesGrid").GetComponent<Grid>();
     }
 
+    void playSound(AudioClip clip)
+    {
+        GetComponent<AudioSource>().clip = clip;
+        GetComponent<AudioSource>().Play();
+    }
 
     public void ExecuteMovement(Vector2 newPosition)
     {
-       
-        if (grid.IsInsideGridBounds(grid.WorldToGrid(newPosition)))
-        {
-            transform.position = newPosition;
-            PreviewSelectedMovement();
-            GameManager.GetInstance().Tic();
-        }
+        
+        if (!GameManager.GetInstance().gameOver)
+            if (grid.IsInsideGridBounds(grid.WorldToGrid(newPosition)))
+            {
+                transform.position = newPosition;
+                PreviewSelectedMovement();
+                GameManager.GetInstance().Tic();
+                playSound(moveSfx);
+            }
 
     }
 
@@ -127,7 +139,7 @@ public class Player : MonoBehaviour
                        v.x + transform.position.x,
                        v.y + transform.position.y);
                 GameObject previewTile;
-                if (grid.IsInsideGridBounds(grid.WorldToGrid(position)))
+                if (grid.IsInsideGridBounds(grid.WorldToGrid(position)) && defenseGrid.GetObjectAt(grid.WorldToGrid(position)) ==null)
                 {
                     previewTile = Instantiate(
                                 actionPreviewPrefab,
@@ -156,11 +168,14 @@ public class Player : MonoBehaviour
 
     internal void ExecuteAction(Vector2 position)
     {
-        if (grid.IsInsideGridBounds(grid.WorldToGrid(position)))
-        {
-            GameObject actionObject = Instantiate(SelectedAction.placeablePrefab, position, Quaternion.identity);
-            ClearSelectedAction();
-            GameManager.GetInstance().Tic();
-        }
+        if(!GameManager.GetInstance().gameOver)
+            if (grid.IsInsideGridBounds(grid.WorldToGrid(position)))
+            {
+                GameObject actionObject = Instantiate(SelectedAction.placeablePrefab, position, Quaternion.identity);
+                defenseGrid.SetObjectAt(defenseGrid.WorldToGrid(position), actionObject);
+                ClearSelectedAction();
+                GameManager.GetInstance().Tic();
+                playSound(placeDefense);
+            }
     }
 }

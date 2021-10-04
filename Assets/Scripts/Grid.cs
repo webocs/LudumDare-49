@@ -1,4 +1,4 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,23 +7,44 @@ public class Grid : MonoBehaviour
     private Dictionary<Vector2Int,GameObject> _grid;
     public int Width;
     public int Height;
-    public GameObject cropCell;
+    public GameObject defaultCell;
     public bool _showGrid = true;
-
-    private void Start()
+    public int elementsInGrid;
+    public int startingDefaultcells;
+    public bool fillGrid;
+    private void Awake()
     {
         InitGrid();
     }
 
+    private void Update()
+    {
+        elementsInGrid = _grid.Count;
+    }
     public void InitGrid()
     {
         _grid = new Dictionary<Vector2Int, GameObject>();
-        for(int x=0;x<Width;x++)
-            for(int y = 0; y < Height; y++)
+        if (defaultCell != null)
+            if (fillGrid)
             {
-                GameObject go = Instantiate(cropCell, new Vector3(x, y, transform.position.z),Quaternion.identity);
-                go.GetComponent<Crop>().currentLife = Random.Range(0, 3);
-                SetObjectAt(new Vector2Int(x, y), go);
+                for (int x = 0; x < Width; x++)
+                    for (int y = 0; y < Height; y++)
+                    {                       
+                        GameObject go = Instantiate(defaultCell, new Vector3(x, y, transform.position.z), Quaternion.identity);
+                        go.GetComponent<Crop>().currentLife = UnityEngine.Random.Range(0, 3);
+                        SetObjectAt(new Vector2Int(x, y), go);                        
+                    }
+    }
+            else
+            {
+                for (int i = 0; i < startingDefaultcells; i++)
+                {
+                    int x = UnityEngine.Random.Range(0, Width);
+                    int y = UnityEngine.Random.Range(0, Height);
+                    GameObject go = Instantiate(defaultCell, new Vector3(x, y, transform.position.z), Quaternion.identity);
+                    go.GetComponent<Crop>().currentLife = UnityEngine.Random.Range(0, 3);
+                    SetObjectAt(new Vector2Int(x,y), go);
+                }
             }
                 
     }
@@ -84,5 +105,11 @@ public class Grid : MonoBehaviour
 
     }
 
-
+    internal void RemoveFromGrid(Vector2Int vector2Int)
+    {
+        if (IsInsideGridBounds(vector2Int))
+        {
+            _grid.Remove(vector2Int);
+        }
+    }
 }

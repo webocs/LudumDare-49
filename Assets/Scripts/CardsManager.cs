@@ -78,6 +78,7 @@ public class CardsManager : MonoBehaviour
     private Action drawNewActionCard()
     {
         int randomCard = UnityEngine.Random.Range(0, allActions.Count);
+        if (UnityEngine.Random.Range(0, 100) > 70) Debug.Log("");
         return (allActions[randomCard]);
     }
   
@@ -111,7 +112,7 @@ public class CardsManager : MonoBehaviour
 
     public void useActionCard(Vector2 position)
     {
-        actionCards[currentMovementCard] = drawNewActionCard();
+        actionCards[currentActionCard] = drawNewActionCard();
         player.ExecuteAction(position);
         player.SelectedAction = null;
         player.PreviewSelectedAction();
@@ -130,36 +131,6 @@ public class CardsManager : MonoBehaviour
         Vector3 position = go.transform.position;
         useActionCard(position);
     }
-
-    private void Update()
-    {      
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            selectMovementCard(0);
-        }
-        else if (Input.GetKeyDown(KeyCode.W))
-        {
-            selectMovementCard(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.E))
-        {
-            selectMovementCard(2);
-        }
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-            selectActionCard(0);
-        }
-        else if (Input.GetKeyDown(KeyCode.S))
-        {
-            selectActionCard(1);
-        }
-        else if (Input.GetKeyDown(KeyCode.D))
-        {
-            selectActionCard(2);
-        }
-    }
-
-
 
 
 }

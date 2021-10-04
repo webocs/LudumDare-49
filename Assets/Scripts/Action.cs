@@ -12,7 +12,7 @@ public class Action : MonoBehaviour
     public Vector2Int[] PossibleDestinations;
     private void Start()
     {
-        grid = FindObjectOfType<Grid>();
+        grid = GameObject.Find("CropsGrid").GetComponent<Grid>();
 
         // -1 to remove center
         PossibleDestinations = new Vector2Int[transform.Find("Positions").childCount];

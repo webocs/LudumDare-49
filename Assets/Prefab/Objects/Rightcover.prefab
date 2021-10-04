@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5370756026239916124, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
+      propertyPath: canBlock
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3141336772801079028, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
       propertyPath: m_RootOrder
       value: 0
@@ -53,7 +57,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4102427760045866390, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
       propertyPath: m_Name
-      value: DirectionCover
+      value: Rightcover
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}

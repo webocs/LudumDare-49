@@ -7,6 +7,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -5370756026239916124, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
+      propertyPath: canBlock
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 1482141295409807582, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
       propertyPath: direction.x
       value: -1
