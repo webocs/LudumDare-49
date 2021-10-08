@@ -139,7 +139,9 @@ public class Player : MonoBehaviour
                        v.x + transform.position.x,
                        v.y + transform.position.y);
                 GameObject previewTile;
-                if (grid.IsInsideGridBounds(grid.WorldToGrid(position)) && defenseGrid.GetObjectAt(grid.WorldToGrid(position)) ==null)
+                if (
+                    SelectedAction.canBePlacedOnTopOfOtherDefenses || 
+                    (grid.IsInsideGridBounds(grid.WorldToGrid(position)) && defenseGrid.GetObjectAt(grid.WorldToGrid(position)) ==null))
                 {
                     previewTile = Instantiate(
                                 actionPreviewPrefab,
@@ -168,11 +170,13 @@ public class Player : MonoBehaviour
 
     internal void ExecuteAction(Vector2 position)
     {
+        Debug.Log("Executing action");
         if(!GameManager.GetInstance().gameOver)
             if (grid.IsInsideGridBounds(grid.WorldToGrid(position)))
             {
                 GameObject actionObject = Instantiate(SelectedAction.placeablePrefab, position, Quaternion.identity);
-                defenseGrid.SetObjectAt(defenseGrid.WorldToGrid(position), actionObject);
+                if(SelectedAction.takesSpaceInGrid)
+                    defenseGrid.SetObjectAt(defenseGrid.WorldToGrid(position), actionObject);
                 ClearSelectedAction();
                 GameManager.GetInstance().Tic();
                 playSound(placeDefense);

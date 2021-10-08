@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -40,6 +41,11 @@ public class GameManager : MonoBehaviour
 
     public void Tic()
     {
+        ClimateEvent[] events = FindObjectsOfType<ClimateEvent>();
+        foreach(ClimateEvent c in events)
+        {
+            c.DrawEventPreview();
+        }
         Debug.Log("TIC");
         currentTurn += 1;
         currentDayText.text = string.Format("Day {0}", currentTurn);
@@ -131,21 +137,45 @@ public class GameManager : MonoBehaviour
         if (eventToSpawn != null)
         {
             Vector2Int position = new Vector2Int(xValue, yValue);
-            if (!currentClimateEvents.ContainsKey(position) || !currentClimateEvents[position]!=null)
+            bool preventSpawn = false;
+            if (!currentClimateEvents.ContainsKey(position))
             {
-               currentClimateEvents.Add(
-                    position, Instantiate(eventToSpawn.gameObject,
-                    cropsGrid.GridToWorld(position), Quaternion.identity).GetComponent<ClimateEvent>()
-                );
+                foreach(Vector2Int c in currentClimateEvents.Keys) {
+                    if (isHorizontal)
+                    {
+                        if (c.y == position.y) preventSpawn = true;
+                    }
+                    else
+                    {
+                        if (c.x == position.x) preventSpawn = true;
+                    }
+                }
+                if(!preventSpawn)
+                   currentClimateEvents.Add(
+                        position, Instantiate(eventToSpawn.gameObject,
+                        cropsGrid.GridToWorld(position), Quaternion.identity).GetComponent<ClimateEvent>()
+                    );
             }
         }
     }
 
-    internal void IncreaseScore()
+    internal int IncreaseScore()
     {
-        currentScore = Mathf.CeilToInt(10f* Mathf.Log(currentTurn) * cropScore);
+        int addedScore = Mathf.CeilToInt(10f* Mathf.Log(currentTurn) * cropScore);
+        IEnumerator co = IncreaseScoreSlowly(currentScore + addedScore);
+        StartCoroutine(co);
+        return addedScore;
     }
 
+    IEnumerator IncreaseScoreSlowly(int targetScore)
+    {
+        while (currentScore < targetScore) {
+            currentScore += Mathf.CeilToInt((targetScore-currentScore) * 0.01f);
+            currentScoreText.text = string.Format("{0}", currentScore);
+            yield return null;
+        }
+        currentScore = targetScore;
+    }
     public void ClearClimateEvent(Vector2Int position)
     {
         if (currentClimateEvents.ContainsKey(position))

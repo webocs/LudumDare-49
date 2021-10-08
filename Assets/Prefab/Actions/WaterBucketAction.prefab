@@ -77,9 +77,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   uiActionSprite: {fileID: 1528203702100030697, guid: 88f73daf1fe26d24994ed038a6601dd5, type: 3}
   actionName: Cover Cell
-  placeablePrefab: {fileID: 4825010991352572252, guid: c516ba0bd020d234e904b18103eff7e8, type: 3}
+  placeablePrefab: {fileID: 4102427760045866390, guid: 47bb9cd0a2d52b44abf8a974e292e43e, type: 3}
   grid: {fileID: 0}
   PossibleDestinations: []
+  canBePlacedOnTopOfOtherDefenses: 1
 --- !u!1 &6299173100878870661
 GameObject:
   m_ObjectHideFlags: 0

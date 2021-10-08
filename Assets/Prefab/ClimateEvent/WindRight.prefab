@@ -133,12 +133,14 @@ MonoBehaviour:
   defenseGrid: {fileID: 0}
   turnsUntilExecution: 3
   climateEventPreview: {fileID: 8415342058658163159, guid: db78aca767673614e876da7fdde3c8b5, type: 3}
+  climateEventBlockedPreview: {fileID: 8415342058658163159, guid: 14f3133cb758a944ba652a91e19632f6, type: 3}
   previewObjects: []
   executionSfx: {fileID: 8300000, guid: 098793440dbf7ec43baf0187c1608562, type: 3}
-  shortAnimationPrefab: {fileID: 6880133238872507034, guid: a9512a4de5200644dbb57a00771e8b76, type: 3}
+  shortAnimationPrefab: {fileID: 6880133238872507034, guid: 9e36e6479b1d40a41a2dd0da759ecb0e, type: 3}
   shortAnimationController: {fileID: 9100000, guid: 4ab727e3a27ea0c46899f2893a62efdf, type: 2}
   alreadyExecuted: 0
   turnsIndicator: {fileID: 4219641128610271763}
+  shakesCamera: 1
 --- !u!82 &-8729448978195951641
 AudioSource:
   m_ObjectHideFlags: 0

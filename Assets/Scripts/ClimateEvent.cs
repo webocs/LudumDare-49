@@ -16,6 +16,7 @@ public class ClimateEvent : Tickable
     public int turnsUntilExecution;
 
     public GameObject climateEventPreview;
+    public GameObject climateEventBlockedPreview;
     public List<GameObject> previewObjects;
 
     public AudioClip executionSfx;
@@ -26,6 +27,8 @@ public class ClimateEvent : Tickable
     public bool alreadyExecuted;
 
     public Text turnsIndicator;
+
+    public bool shakesCamera;
     private void Start()
     {
         previewObjects = new List<GameObject>();
@@ -33,18 +36,23 @@ public class ClimateEvent : Tickable
         defenseGrid = GameObject.Find("DefensesGrid").GetComponent<Grid>();
         startingCell = grid.WorldToGrid(transform.position);
         DrawEventPreview();
-        alreadyExecuted = false;
+        alreadyExecuted = false;        
     }    
     
     void Update()
     {
         turnsIndicator.text = turnsUntilExecution+"";
+        if (alreadyExecuted) Destroy(gameObject);
     }
 
     public void ExecuteEvent()
     {
+        alreadyExecuted = true;
+        if (shakesCamera)
+            Camera.main.GetComponent<CameraShake>().Shake();
         if (shape == AOEShape.VerticalLineUp)
         {
+           
             for (int i = 0; i < aoeSize; i++)
             {
                 
@@ -172,6 +180,7 @@ public class ClimateEvent : Tickable
             }         
         }
         ClearPreview();
+        Destroy(gameObject);
     }
 
     private void playShortAnimationInSeconds(Vector2Int nextPosition, int i)
@@ -185,22 +194,24 @@ public class ClimateEvent : Tickable
         Destroy(Instantiate(shortAnimationPrefab, grid.GridToWorld(position), Quaternion.identity),1f);
         
     }
-    private int CheckDefensesAtPosition(Vector2Int nextPosition, AOEShape shape)
+    private int CheckDefensesAtPosition(Vector2Int nextPosition, AOEShape shape,bool dealDamage=true)
     {
         int isblocked=0;
         if (defenseGrid.IsInsideGridBounds(nextPosition))
         {
             GameObject defense = defenseGrid.GetObjectAt(nextPosition);
-            if (defense != null)
+            if (defense != null && defense.GetComponent<Defense>())
             {
                 if (defense.GetComponent<Defense>().canBlock == shape)
                 {
-                    defense.GetComponent<Defense>().dealDamage(damage);                    
+                    if(dealDamage)
+                        defense.GetComponent<Defense>().dealDamage(damage);                    
                     isblocked= 1;                                        
                 }
                 else if (defense.GetComponent<Defense>().canBlock == AOEShape.Circle)
                 {
-                    defense.GetComponent<Defense>().dealDamage(damage);
+                    if(dealDamage)
+                        defense.GetComponent<Defense>().dealDamage(damage);
                     isblocked = 2;
                 }
             }
@@ -222,34 +233,82 @@ public class ClimateEvent : Tickable
         ClearPreview();
         if (shape == AOEShape.VerticalLineUp)
         {
+            GameObject selectedPreview = climateEventPreview;
             for (int i = 0; i < aoeSize; i++)
             {
-                Vector3 nextPosition = grid.GridToWorld(new Vector2Int(startingCell.x, startingCell.y + i));
-                previewObjects.Add(Instantiate(climateEventPreview, nextPosition,Quaternion.identity));
+                GameObject g = null;
+                Vector2Int nextPosition = new Vector2Int(startingCell.x, startingCell.y + i);
+                int defenseCheck = CheckDefensesAtPosition(nextPosition, AOEShape.VerticalLineUp,false);
+                if (defenseCheck == 2)
+                {
+                    previewObjects.Add(Instantiate(climateEventBlockedPreview, grid.GridToWorld(nextPosition), Quaternion.identity));
+                }
+                else
+                {
+                    if (defenseCheck == 1)
+                        selectedPreview = climateEventBlockedPreview;
+                    previewObjects.Add(Instantiate(selectedPreview, grid.GridToWorld(nextPosition), Quaternion.identity));
+                }
             }
         }   
         else if (shape == AOEShape.VerticalLineDown)
         {
+            GameObject selectedPreview = climateEventPreview;
             for (int i = 0; i < aoeSize; i++)
             {
-                Vector3 nextPosition = grid.GridToWorld(new Vector2Int(startingCell.x, startingCell.y - i));
-                previewObjects.Add(Instantiate(climateEventPreview, nextPosition, Quaternion.identity));
+                GameObject g = null;
+                Vector2Int nextPosition = new Vector2Int(startingCell.x, startingCell.y - i);
+                int defenseCheck = CheckDefensesAtPosition(nextPosition, AOEShape.VerticalLineDown, false);
+                if (defenseCheck == 2)
+                {
+                    previewObjects.Add(Instantiate(climateEventBlockedPreview, grid.GridToWorld(nextPosition), Quaternion.identity));
+                }
+                else
+                {
+                    if (defenseCheck == 1)
+                        selectedPreview = climateEventBlockedPreview;
+                    previewObjects.Add(Instantiate(selectedPreview, grid.GridToWorld(nextPosition), Quaternion.identity));
+                }
             }
         }
-        else if (shape == AOEShape.HorizontalLineLeft)
+        else if( shape == AOEShape.HorizontalLineLeft)
         {
+            GameObject selectedPreview = climateEventPreview;
             for (int i = 0; i < aoeSize; i++)
             {
-                Vector3 nextPosition = grid.GridToWorld(new Vector2Int(startingCell.x - i, startingCell.y));
-                previewObjects.Add(Instantiate(climateEventPreview, nextPosition, Quaternion.identity));
+                GameObject g = null;
+                Vector2Int nextPosition = new Vector2Int(startingCell.x - i, startingCell.y);
+                int defenseCheck = CheckDefensesAtPosition(nextPosition, AOEShape.HorizontalLineLeft, false);
+                if (defenseCheck == 2)
+                {
+                    previewObjects.Add(Instantiate(climateEventBlockedPreview, grid.GridToWorld(nextPosition), Quaternion.identity));
+                }
+                else
+                {
+                    if (defenseCheck == 1)
+                        selectedPreview = climateEventBlockedPreview;
+                    previewObjects.Add(Instantiate(selectedPreview, grid.GridToWorld(nextPosition), Quaternion.identity));
+                }
             }
         }
         else if (shape == AOEShape.HorizontalLineRight)
         {
+            GameObject selectedPreview = climateEventPreview;
             for (int i = 0; i < aoeSize; i++)
             {
-                Vector3 nextPosition = grid.GridToWorld(new Vector2Int(startingCell.x + i, startingCell.y));
-                previewObjects.Add(Instantiate(climateEventPreview, nextPosition, Quaternion.identity));
+                GameObject g = null;
+                Vector2Int nextPosition = new Vector2Int(startingCell.x + i, startingCell.y);
+                int defenseCheck = CheckDefensesAtPosition(nextPosition, AOEShape.HorizontalLineRight, false);
+                if (defenseCheck == 2)
+                {
+                    previewObjects.Add(Instantiate(climateEventBlockedPreview, grid.GridToWorld(nextPosition), Quaternion.identity));
+                }
+                else
+                {
+                    if (defenseCheck == 1)
+                        selectedPreview = climateEventBlockedPreview;
+                    previewObjects.Add(Instantiate(selectedPreview, grid.GridToWorld(nextPosition), Quaternion.identity));
+                }
             }
         }
         else if (shape == AOEShape.Circle)

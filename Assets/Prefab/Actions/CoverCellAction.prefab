@@ -204,6 +204,8 @@ MonoBehaviour:
   placeablePrefab: {fileID: 4102427760045866390, guid: 8c228994305d1f946bb855ed8dba0b02, type: 3}
   grid: {fileID: 0}
   PossibleDestinations: []
+  canBePlacedOnTopOfOtherDefenses: 0
+  takesSpaceInGrid: 1
 --- !u!1 &8233544507844512471
 GameObject:
   m_ObjectHideFlags: 0

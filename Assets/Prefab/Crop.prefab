@@ -63,6 +63,8 @@ MonoBehaviour:
   harvestSfx: {fileID: 8300000, guid: feb5f1ead8bb2514bb16ca95c04815e3, type: 3}
   harvestAnimationPrefab: {fileID: 6880133238872507034, guid: a176de4c119022247844fa39101dd506, type: 3}
   wasHarvested: 0
+  shortHighlightAnimation: {fileID: 6880133238872507034, guid: a9512a4de5200644dbb57a00771e8b76, type: 3}
+  scoreCanvas: {fileID: 502540024731318299, guid: 015eae337ee928a468ddf9a8dee1c94c, type: 3}
 --- !u!82 &2462289391343623404
 AudioSource:
   m_ObjectHideFlags: 0

@@ -10,6 +10,8 @@ public class Action : MonoBehaviour
     public Grid grid;
 
     public Vector2Int[] PossibleDestinations;
+    public bool canBePlacedOnTopOfOtherDefenses;
+    public bool takesSpaceInGrid=true;
     private void Start()
     {
         grid = GameObject.Find("CropsGrid").GetComponent<Grid>();
@@ -26,8 +28,6 @@ public class Action : MonoBehaviour
 
     public void executeAction(Vector3 worldPosition)
     {
-        Vector2Int v2Position = grid.WorldToGrid(worldPosition);
-        if (grid.IsInsideGridBounds(v2Position))
-            Instantiate(placeablePrefab, grid.GridToWorld(v2Position),Quaternion.identity);
+      
     }
 }

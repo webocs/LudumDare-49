@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Crop : MonoBehaviour
 {
@@ -17,6 +19,10 @@ public class Crop : MonoBehaviour
 
     public GameObject harvestAnimationPrefab;
     public bool wasHarvested;
+
+    public GameObject shortHighlightAnimation;
+
+    public GameObject scoreCanvas;
 
     private void Start()
     {       
@@ -44,12 +50,13 @@ public class Crop : MonoBehaviour
                 fullyGrownAtTurn = -1;
             }
 
-            if (!wasHarvested && currentLife >= maxLife)
-                Harvest();
+           /* if (!wasHarvested && currentLife >= maxLife)
+                Harvest();*/
             if (currentLife >= 0)
             {
                 int currentSprite = currentLife - 1;
                 if (currentSprite < 1) currentSprite = 1;
+                if (currentSprite >= lifeSprites.Length) currentSprite = lifeSprites.Length - 1;
                 transform.Find("sprite").GetComponent<SpriteRenderer>().sprite = lifeSprites[currentSprite];
             }
         }
@@ -66,7 +73,7 @@ public class Crop : MonoBehaviour
             Grid grid = GameObject.Find("CropsGrid").GetComponent<Grid>();
             grid.RemoveFromGrid(grid.WorldToGrid(transform.position));
             playSound(hurtSfx);
-            Destroy(gameObject,.5f);
+            Destroy(gameObject,.1f);
         }
 
     }
@@ -77,37 +84,62 @@ public class Crop : MonoBehaviour
         GetComponent<AudioSource>().Play();
     }
 
-    private void Harvest()
+    public void Harvest()
     {
-        wasHarvested = true;
-        Destroy(Instantiate(harvestAnimationPrefab, transform.position, Quaternion.identity),1.2f);
-        
-        GameManager.GetInstance().IncreaseScore();
-        Vector2 upSlot = transform.position + Vector3.up;
-        Vector2 downSlot = transform.position + Vector3.down;
-        Vector2 leftSlot = transform.position + Vector3.left;
-        Vector2 rightSlot = transform.position + Vector3.right;
-        Vector2[] slots = { upSlot, downSlot, leftSlot, rightSlot };
-
         Grid grid = GameObject.Find("CropsGrid").GetComponent<Grid>();
-        // 50% chance of spawning 2 seeds instead of 1
-        for (int i = 0; i < (Random.Range(0,100)>85?1:2); i++)
+
+        if (currentLife >= maxLife)
         {
-            Vector2 v = slots[Random.Range(0, slots.Length)];
-            Vector2Int gridSlot = grid.WorldToGrid(v);
-            if (grid.IsInsideGridBounds(gridSlot))
+            wasHarvested = true;
+            Destroy(Instantiate(harvestAnimationPrefab, transform.position, Quaternion.identity), 1.2f);
+
+            int addedScore = GameManager.GetInstance().IncreaseScore();            
+            Vector2 upSlot = transform.position + Vector3.up;
+            Vector2 downSlot = transform.position + Vector3.down;
+            Vector2 leftSlot = transform.position + Vector3.left;
+            Vector2 rightSlot = transform.position + Vector3.right;
+
+            List<Vector2> slots = new List<Vector2>();
+            slots.Add(upSlot);
+            slots.Add(downSlot);
+            slots.Add(leftSlot);
+            slots.Add(rightSlot);
+
+            if (grid.WorldToGrid(transform.position).x == 0) slots.Remove(leftSlot);
+            else if (grid.WorldToGrid(transform.position).x == grid.Width-1) slots.Remove(rightSlot);
+            if (grid.WorldToGrid(transform.position).y == 0) slots.Remove(downSlot);
+            else if (grid.WorldToGrid(transform.position).y == grid.Height-1) slots.Remove(upSlot);
+            
+
+            // 50% chance of spawning 2 seeds instead of 1
+            for (int i = 0; i < 2; i++)
             {
-                if (grid.GetObjectAt(gridSlot) == null)
+                Vector2 v = slots[Random.Range(0, slots.Count)];
+                Vector2Int gridSlot = grid.WorldToGrid(v);
+                if (grid.IsInsideGridBounds(gridSlot))
                 {
-                    Crop c = Instantiate(cropPrefab, grid.GridToWorld(gridSlot), Quaternion.identity).GetComponent<Crop>();
-                    c.currentLife = 1;
-                    grid.SetObjectAt(gridSlot, c.gameObject);
+                    if (grid.GetObjectAt(gridSlot) == null)
+                    {
+                        Crop c = Instantiate(cropPrefab, grid.GridToWorld(gridSlot), Quaternion.identity).GetComponent<Crop>();
+                        Instantiate(shortHighlightAnimation, grid.GridToWorld(gridSlot), Quaternion.identity);
+                        c.currentLife = 1;
+                        grid.SetObjectAt(gridSlot, c.gameObject);
+                    }
                 }
+                slots.Remove(v);
             }
-        }      
-        grid.RemoveFromGrid(grid.WorldToGrid(transform.position));
-        playSound(harvestSfx);
-        Destroy(this.gameObject,.2f);
+            grid.RemoveFromGrid(grid.WorldToGrid(transform.position));
+            GameObject canvas = Instantiate(scoreCanvas, transform.position, Quaternion.identity);
+            canvas.GetComponentInChildren<Text>().text = addedScore + "";
+            playSound(harvestSfx);
+            Destroy(this.gameObject, .2f);
+        }
+        else
+        {
+            grid.RemoveFromGrid(grid.WorldToGrid(transform.position));
+            playSound(harvestSfx);
+            Destroy(this.gameObject, .2f);
+        }
     }
    
     internal void Grow()
