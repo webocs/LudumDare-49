@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5442795545033425937}
   - component: {fileID: 5442795545033425936}
+  - component: {fileID: 1578395695}
   m_Layer: 0
   m_Name: sprite
   m_TagString: Untagged
@@ -82,6 +83,25 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &1578395695
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5442795545033425938}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 5ce956df2810714469b591912c4aef41, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &5442795545399556910
 GameObject:
   m_ObjectHideFlags: 0
@@ -137,6 +157,12 @@ MonoBehaviour:
   cantActPreviewPrefab: {fileID: 5529769315209592246, guid: 3b0d1ea59bed78c419ffc6ca50ca93c8, type: 3}
   grid: {fileID: 0}
   defenseGrid: {fileID: 0}
+  moveSfx: {fileID: 8300000, guid: 11681c1be1831c4488416a2140675bfe, type: 3}
+  placeDefense: {fileID: 8300000, guid: 786a5b693d2e8294e8f02a51f4a74965, type: 3}
+  currentLife: 3
+  MAX_LIFE: 3
+  lifeMarkerPrefab: {fileID: 3599468227046422732, guid: 75b6956da4afcfc40acd24da72d64af0, type: 3}
+  lifeMarkersPanel: {fileID: 0}
 --- !u!82 &1187448845102121565
 AudioSource:
   m_ObjectHideFlags: 0

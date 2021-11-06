@@ -42,7 +42,16 @@ public class ClimateEvent : Tickable
     void Update()
     {
         turnsIndicator.text = turnsUntilExecution+"";
-        if (alreadyExecuted) Destroy(gameObject);
+        if (alreadyExecuted)
+        {
+            ClearPreview();            
+            Destroy(gameObject, 2f);
+            foreach(Transform t in turnsIndicator.transform.parent)
+            {
+                t.gameObject.SetActive(false);
+            }
+
+        }
     }
 
     public void ExecuteEvent()
@@ -72,9 +81,13 @@ public class ClimateEvent : Tickable
                     }
                     if (g != null && g.GetComponent<Crop>())
                     {
-                        playShortAnimationInSeconds(nextPosition, i);
                         g.GetComponent<Crop>().DealDamage(damage);
                     }
+                    playShortAnimationInSeconds(nextPosition, i);
+                }
+                if (grid.WorldToGrid(FindObjectOfType<Player>().transform.position) == nextPosition)
+                {
+                    FindObjectOfType<Player>().DealDamage(1);
                 }
                 // ADd code for blockeers here
             }
@@ -103,6 +116,10 @@ public class ClimateEvent : Tickable
                     }
                     playShortAnimationInSeconds(nextPosition, i);
                 }
+                if (grid.WorldToGrid(FindObjectOfType<Player>().transform.position) == nextPosition)
+                {
+                    FindObjectOfType<Player>().DealDamage(1);
+                }
                 // ADd code for blockeers here
             }
         }
@@ -129,6 +146,10 @@ public class ClimateEvent : Tickable
                         g.GetComponent<Crop>().DealDamage(damage);
                     }
                     playShortAnimationInSeconds(nextPosition, i);
+                }
+                if (grid.WorldToGrid(FindObjectOfType<Player>().transform.position) == nextPosition)
+                {
+                    FindObjectOfType<Player>().DealDamage(1);
                 }
                 // ADd code for blockeers here
             }
@@ -157,6 +178,10 @@ public class ClimateEvent : Tickable
                     }
                     playShortAnimationInSeconds(nextPosition, i);
                 }
+                if (grid.WorldToGrid(FindObjectOfType<Player>().transform.position) == nextPosition)
+                {
+                    FindObjectOfType<Player>().DealDamage(1);
+                }
                 // ADd code for blockeers here
             }
         }
@@ -176,11 +201,16 @@ public class ClimateEvent : Tickable
                         g.GetComponent<Crop>().DealDamage(damage);
                     }
                     playShortAnimationInSeconds(nextPosition, x + y);
+                    if (grid.WorldToGrid(FindObjectOfType<Player>().transform.position) == nextPosition)
+                    {
+                        FindObjectOfType<Player>().DealDamage(1);
+                    }
                 }
-            }         
+            }
+
         }
         ClearPreview();
-        Destroy(gameObject);
+        Destroy(gameObject, 20f);
     }
 
     private void playShortAnimationInSeconds(Vector2Int nextPosition, int i)
@@ -203,17 +233,15 @@ public class ClimateEvent : Tickable
             if (defense != null && defense.GetComponent<Defense>())
             {
                 if (defense.GetComponent<Defense>().canBlock == shape)
-                {
-                    if(dealDamage)
-                        defense.GetComponent<Defense>().dealDamage(damage);                    
+                {                               
                     isblocked= 1;                                        
                 }
                 else if (defense.GetComponent<Defense>().canBlock == AOEShape.Circle)
-                {
-                    if(dealDamage)
-                        defense.GetComponent<Defense>().dealDamage(damage);
+                {                   
                     isblocked = 2;
                 }
+                if (dealDamage)
+                    defense.GetComponent<Defense>().dealDamage(damage);
             }
         }
         return isblocked;
@@ -334,7 +362,11 @@ public class ClimateEvent : Tickable
             ExecuteEvent();
             GameManager.GetInstance().ClearClimateEvent(new Vector2Int((int)transform.position.x, (int)transform.position.y));
             playSound(executionSfx);
-            Destroy(gameObject,1f);
+        }
+        ClimateEvent[] events = FindObjectsOfType<ClimateEvent>();
+        foreach(ClimateEvent c  in events)
+        {
+            c.DrawEventPreview();
         }
       
     }

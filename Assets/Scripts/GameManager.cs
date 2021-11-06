@@ -72,12 +72,31 @@ public class GameManager : MonoBehaviour
         ClimateEventSpawnChance = Mathf.CeilToInt(Mathf.Log(currentTurn)* 15);
     }
 
-    private void GameOver()
+    public void GameOver()
     {
         gameOver = true;
         Debug.Log("Game Over");
         PlayerPrefs.SetInt("days", currentTurn);
         PlayerPrefs.SetInt("score", currentScore);
+        FindObjectOfType<Fader>().FadeIn();
+        Invoke("NextScene", 6f);
+        GetComponent<AudioSource>().Play();
+        StartCoroutine(FadeMusic());        
+    }
+
+    IEnumerator FadeMusic()
+    {
+        AudioSource audioSource = GameObject.Find("MusicPlayer").GetComponent<AudioSource>();
+        float volumeDecrease = 0.01f;
+        while (true)
+        {  
+            audioSource.volume -= volumeDecrease;
+            yield return new WaitForSeconds(.1f);
+        }
+    }
+
+    private void NextScene()
+    {
         FindObjectOfType<SceneChanger>().change();
     }
 

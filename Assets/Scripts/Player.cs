@@ -6,7 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public Movement SelectedMovement;
-    public Action SelectedAction;
+    public ExecutableAction SelectedAction;
 
     public List<GameObject> MovementPreviewTiles;
     public GameObject movePreviewPrefab;
@@ -20,7 +20,14 @@ public class Player : MonoBehaviour
     public Grid defenseGrid;
 
     public AudioClip moveSfx;
-    public AudioClip placeDefense;    
+    public AudioClip placeDefenseSfx;
+    public AudioClip hitSfx;
+
+    public int currentLife;
+    public int MAX_LIFE;
+
+    public GameObject lifeMarkerPrefab;
+    public GameObject lifeMarkersPanel;
     
     private void Start()
     {
@@ -28,12 +35,38 @@ public class Player : MonoBehaviour
         PreviewSelectedMovement();
         grid = GameObject.Find("CropsGrid").GetComponent<Grid>();
         defenseGrid = GameObject.Find("DefensesGrid").GetComponent<Grid>();
+        currentLife = MAX_LIFE;
+        while (lifeMarkersPanel.transform.childCount < currentLife)
+        {
+            Instantiate(lifeMarkerPrefab, lifeMarkersPanel.transform);
+        }
+
     }
 
-    void playSound(AudioClip clip)
+    void PlaySound(AudioClip clip)
     {
         GetComponent<AudioSource>().clip = clip;
         GetComponent<AudioSource>().Play();
+    }
+
+    public void DealDamage(int dmg)
+    {
+        currentLife -= dmg;
+        FindObjectOfType<GlobalSoundPlayer>().Play(hitSfx);        
+        if (currentLife <= 0)
+        {
+            Crop[] crops = FindObjectsOfType<Crop>();
+            foreach(Crop c in crops)
+            {
+                c.DealDamage(100);
+            }
+            GameManager.GetInstance().GameOver();
+        }
+        if (currentLife < lifeMarkersPanel.transform.childCount && lifeMarkersPanel.transform.childCount>0)
+        {
+            Destroy(lifeMarkersPanel.transform.GetChild(0).gameObject);
+        }
+        transform.GetChild(0).GetComponent<Animator>().SetTrigger("hit");
     }
 
     public void ExecuteMovement(Vector2 newPosition)
@@ -45,7 +78,7 @@ public class Player : MonoBehaviour
                 transform.position = newPosition;
                 PreviewSelectedMovement();
                 GameManager.GetInstance().Tic();
-                playSound(moveSfx);
+                PlaySound(moveSfx);
             }
 
     }
@@ -179,7 +212,7 @@ public class Player : MonoBehaviour
                     defenseGrid.SetObjectAt(defenseGrid.WorldToGrid(position), actionObject);
                 ClearSelectedAction();
                 GameManager.GetInstance().Tic();
-                playSound(placeDefense);
+                PlaySound(placeDefenseSfx);
             }
     }
 }

@@ -26,4 +26,13 @@ public class SceneChanger : MonoBehaviour
         PlayerPrefs.SetInt("score", 0);
     }
 
+    public void changeToTutorial()
+    {
+        SceneManager.LoadScene(3);       
+    }
+   public void changeToLeaderBoard()
+    {
+        SceneManager.LoadScene(4);       
+    }
+
 }

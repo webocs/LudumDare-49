@@ -15,8 +15,8 @@ public class CardsManager : MonoBehaviour
 
 
     public int currentActionCard;
-    public Action[] actionCards;
-    public List<Action> allActions;
+    public ExecutableAction[] actionCards;
+    public List<ExecutableAction> allActions;
 
     public GameObject uiMovementCardsHolderPanel;
     public GameObject uiActionCardsHolderPanel;
@@ -25,15 +25,28 @@ public class CardsManager : MonoBehaviour
 
     public Player player;
 
+    private int scytheCardNumber = 0;
+
     void Start()
     {
-        allActions = new List<Action>(FindObjectsOfType<Action>());
-        actionCards = new Action[maxActionCards];
+        allActions = new List<ExecutableAction>(FindObjectsOfType<ExecutableAction>());
+        int index = 0;
+        foreach(ExecutableAction ea in allActions)
+        {
+            if (ea.placeablePrefab.name == "Scythe")
+            {
+                scytheCardNumber = index;
+                break;
+            }
+            index++;
+        }
+        actionCards = new ExecutableAction[maxActionCards];
         for (int i = 0; i < maxActionCards; i++)
         {
             int randomCard = UnityEngine.Random.Range(0, allActions.Count);
             actionCards[i] = (allActions[randomCard]);
         }
+        actionCards[UnityEngine.Random.Range(0, actionCards.Length)] = allActions[scytheCardNumber];
 
         allMovements = new List<Movement>(FindObjectsOfType<Movement>());
         movementCards = new Movement[maxMovementCards];
@@ -63,7 +76,7 @@ public class CardsManager : MonoBehaviour
             newCard.transform.Find("CardSprite").GetComponent<Image>().sprite = movement.uiMovementSprite;
         }
 
-        foreach (Action action in actionCards)
+        foreach (ExecutableAction action in actionCards)
         {
             GameObject newCard = Instantiate(uiActionCardPrefab, uiActionCardsHolderPanel.transform);
             newCard.transform.Find("CardSprite").GetComponent<Image>().sprite = action.uiActionSprite;
@@ -75,10 +88,22 @@ public class CardsManager : MonoBehaviour
         return (allMovements[randomCard]);        
     }
 
-    private Action drawNewActionCard()
+    private ExecutableAction drawNewActionCard()
     {
+        bool hasScythe = false;
         int randomCard = UnityEngine.Random.Range(0, allActions.Count);
-        if (UnityEngine.Random.Range(0, 100) > 70) Debug.Log("");
+        foreach(ExecutableAction ea in actionCards)
+        {
+            if(ea.placeablePrefab.name == "Scythe")
+            {
+                hasScythe = true;
+            }
+        }
+        if (!hasScythe)
+        {
+            Debug.Log("No scythe, adding one artificially");
+            return allActions[scytheCardNumber];
+        }
         return (allActions[randomCard]);
     }
   

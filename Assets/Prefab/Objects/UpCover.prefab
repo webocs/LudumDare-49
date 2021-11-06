@@ -7,10 +7,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: -7455743740095384538, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
+      propertyPath: m_Volume
+      value: 0.629
+      objectReference: {fileID: 0}
+    - target: {fileID: -7455743740095384538, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -5370756026239916124, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
       propertyPath: canBlock
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: -5370756026239916124, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
+      propertyPath: destroySfx
+      value: 
+      objectReference: {fileID: 8300000, guid: d151e9825b0ef3248b9e0efa205b603c, type: 3}
+    - target: {fileID: -5370756026239916124, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
+      propertyPath: shortDefenseDestroyedAnimation
+      value: 
+      objectReference: {fileID: 6880133238872507034, guid: 5f417c8b2fa71094d90bf4a8128a5fcc, type: 3}
     - target: {fileID: 1482141295409807582, guid: db8896c76076d544eb1d6c9ec4cf9e86, type: 3}
       propertyPath: direction.x
       value: 0

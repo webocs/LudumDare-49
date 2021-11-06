@@ -43,6 +43,8 @@ public class Grid : MonoBehaviour
                     int y = UnityEngine.Random.Range(0, Height);
                     GameObject go = Instantiate(defaultCell, new Vector3(x, y, transform.position.z), Quaternion.identity);
                     go.GetComponent<Crop>().currentLife = UnityEngine.Random.Range(0, 3);
+                    // Prevent overlaping crops
+                    if (GetObjectAt(new Vector2Int(x, y)!) != null) i--;
                     SetObjectAt(new Vector2Int(x,y), go);
                 }
             }

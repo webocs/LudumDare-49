@@ -10,9 +10,7 @@ public class ScoreScreen : MonoBehaviour
     void Start()
     {
         scoreScreenText.text = string.Format(
-            "All your crops have died \n You have survived for {0} days \n your score is {1} \n" +
-            "Made by Webox in 48hs for Ludum Dare 49 " +
-            "Thanks for playing", PlayerPrefs.GetInt("days"), PlayerPrefs.GetInt("score"));
+            "You have survived for {0} days \n with a score of {1} \n" , PlayerPrefs.GetInt("days"), PlayerPrefs.GetInt("score"));
     }
 
 }

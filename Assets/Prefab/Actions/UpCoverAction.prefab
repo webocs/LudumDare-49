@@ -72,11 +72,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 4410302436300532878}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bd0067a68a671c49830f404173f4e01, type: 3}
+  m_Script: {fileID: 11500000, guid: 001b7f3d5146f1341a5512fcce8cc0ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   uiActionSprite: {fileID: -8276262488406422588, guid: 88f73daf1fe26d24994ed038a6601dd5, type: 3}
-  actionName: Cover Cell
+  actionName: 
   placeablePrefab: {fileID: 4825010991352572252, guid: e393a0dbe6b4d5b4596ad750fd79e004, type: 3}
   grid: {fileID: 0}
   PossibleDestinations: []
